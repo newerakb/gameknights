@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131102022305) do
+ActiveRecord::Schema.define(version: 20131102030314) do
 
   create_table "game_mechanics", force: true do |t|
     t.integer  "game_id",     null: false
@@ -65,14 +65,18 @@ ActiveRecord::Schema.define(version: 20131102022305) do
   add_index "player_sessions", ["session_id"], name: "index_player_sessions_on_session_id", using: :btree
 
   create_table "players", force: true do |t|
-    t.string   "nickname",   null: false
-    t.string   "first_name"
-    t.string   "last_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "team_id"
+    t.string   "alias"
+    t.boolean  "display_real_name", default: false
+    t.boolean  "team_admin",        default: false
+    t.boolean  "team_owner",        default: false
   end
 
-  add_index "players", ["nickname"], name: "index_players_on_nickname", unique: true, using: :btree
+  add_index "players", ["team_id"], name: "index_players_on_team_id", using: :btree
+  add_index "players", ["user_id"], name: "index_players_on_user_id", using: :btree
 
   create_table "sessions", force: true do |t|
     t.integer  "game_id",    null: false
@@ -98,21 +102,6 @@ ActiveRecord::Schema.define(version: 20131102022305) do
   add_index "team_games", ["team_id", "game_id"], name: "index_team_games_on_team_id_and_game_id", unique: true, using: :btree
   add_index "team_games", ["team_id"], name: "index_team_games_on_team_id", using: :btree
 
-  create_table "team_players", force: true do |t|
-    t.integer  "team_id",                           null: false
-    t.integer  "player_id",                         null: false
-    t.string   "player_alias"
-    t.boolean  "display_real_name", default: false
-    t.boolean  "admin",             default: false
-    t.boolean  "owner",             default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "team_players", ["player_id"], name: "index_team_players_on_player_id", using: :btree
-  add_index "team_players", ["team_id", "player_id"], name: "index_team_players_on_team_id_and_player_id", unique: true, using: :btree
-  add_index "team_players", ["team_id"], name: "index_team_players_on_team_id", using: :btree
-
   create_table "teams", force: true do |t|
     t.string   "name",       null: false
     t.datetime "created_at"
@@ -120,5 +109,21 @@ ActiveRecord::Schema.define(version: 20131102022305) do
   end
 
   add_index "teams", ["name"], name: "index_teams_on_name", unique: true, using: :btree
+
+  create_table "users", force: true do |t|
+    t.string   "nickname",                        null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email",                           null: false
+    t.string   "password_digest"
+    t.string   "remember_token"
+    t.boolean  "site_admin",      default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["nickname"], name: "index_users_on_nickname", unique: true, using: :btree
+  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
 
 end
