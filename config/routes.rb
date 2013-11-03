@@ -1,10 +1,12 @@
 Gamenight::Application.routes.draw do
-  get "teams/new"
-  get "users/new"
   root 'static_pages#home'
   
   resources :users
   match '/signup', to: 'users#new', via: 'get'
+  
+  resources :sessions, only: [:new, :create, :destroy]
+  match '/signin',  to: 'sessions#new',     via: 'get'
+  match '/signout', to: 'sessions#destroy', via: 'delete'
   
   
   
