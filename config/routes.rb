@@ -8,6 +8,9 @@ Gamenight::Application.routes.draw do
   match '/signin',  to: 'sessions#new',     via: 'get'
   match '/signout', to: 'sessions#destroy', via: 'delete'
   
+  resources :teams
+  match '/newteam', to: 'teams#new', via: 'get'
+  
   
   
   

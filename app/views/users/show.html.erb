@@ -5,6 +5,11 @@
         <%= "#{@user.username} (#{@user.email})" %>
       </h1>
       <%= link_to "Create a team", "#", class: "btn btn-large btn-primary" %>
+      
+      <% if signed_in? && (current_user.site_admin? || current_user?(@user)) %>
+           <%= link_to "delete", @user, method: :delete,
+               data: { confirm: "Really delete #{@user.username}?" } %>
+      <% end %>
     </section>
   </aside>
 </div>
